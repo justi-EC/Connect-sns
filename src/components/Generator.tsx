@@ -1,4 +1,4 @@
-import { dbService, storageService } from '../firebase/config';
+import { appFireStore, appStorage } from '../firebase/config';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { DocumentData, addDoc, collection } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,14 +6,13 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { ImFilePicture } from 'react-icons/im';
 import { IoMdClose } from 'react-icons/io';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
-interface Props {
-  userObj: DocumentData | null;
-}
-
-const Generator = ({ userObj }: Props) => {
+const Generator = () => {
   const [feed, setFeed] = useState('');
   const [attachment, setAttachment] = useState<string | null>('');
+  const userObj = useSelector((state: RootState) => state.user.userObj);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,14 +20,11 @@ const Generator = ({ userObj }: Props) => {
       let attachmentUrl = '';
       if (userObj) {
         if (attachment !== '') {
-          const attachmentRef = ref(
-            storageService,
-            `${userObj.uid}/${uuidv4()}`,
-          );
+          const attachmentRef = ref(appStorage, `${userObj.uid}/${uuidv4()}`);
           await uploadString(attachmentRef, attachment!, 'data_url');
           attachmentUrl = await getDownloadURL(attachmentRef);
         }
-        await addDoc(collection(dbService, 'feeds'), {
+        await addDoc(collection(appFireStore, 'feeds'), {
           text: feed,
           createdAt: Date.now(),
           creatorId: userObj.uid,
@@ -174,11 +170,11 @@ export const SubmitButton = styled.input`
   background-color: #000000;
   color: #ffffff;
   box-sizing: border-box;
-  height: 4rem;
+  height: 3rem;
   padding: 0 1.3rem;
   border-radius: 3rem;
   border-color: transparent;
-  font-size: 1.3rem;
+  font-size: 1rem;
   &:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);

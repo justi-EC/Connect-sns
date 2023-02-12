@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { authService } from '../firebase/config';
+import { appAuth } from '../firebase/config';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -33,14 +33,10 @@ const AuthForm = ({ newAccount, setNewAccount }: Props) => {
     try {
       let data;
       if (newAccount) {
-        data = await createUserWithEmailAndPassword(
-          authService,
-          email,
-          password,
-        );
+        data = await createUserWithEmailAndPassword(appAuth, email, password);
         navigate('/profile');
       } else {
-        data = await signInWithEmailAndPassword(authService, email, password);
+        data = await signInWithEmailAndPassword(appAuth, email, password);
       }
     } catch (error: any) {
       switch (error.code) {

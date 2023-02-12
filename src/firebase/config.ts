@@ -21,7 +21,9 @@ const firebaseConfig = {
   appId: VITE_FIREBASE_APP_ID,
 };
 
-initializeApp(firebaseConfig);
-export const authService = getAuth();
-export const dbService = getFirestore();
-export const storageService = getStorage();
+const app = initializeApp(firebaseConfig);
+const appFireStore = getFirestore(app);
+const appAuth = getAuth();
+const appStorage = getStorage();
+
+export { app, appFireStore, appAuth, appStorage };

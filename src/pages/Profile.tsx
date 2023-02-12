@@ -3,21 +3,21 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, updateProfile } from 'firebase/auth';
 import { Main } from './Home';
-import { authService } from '../firebase/config';
+import { appAuth } from '../firebase/config';
 import { SubmitButton } from '../components/Generator';
-import { DocumentData } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { useDispatch } from 'react-redux/es/exports';
+import { userActions } from '../store/UserSlice';
 
-interface Props {
-  userObj: DocumentData | null;
-  refreshUser: () => void;
-}
-
-const Profile = ({ userObj, refreshUser }: Props) => {
+const Profile = () => {
   const navigate = useNavigate();
+  const userObj = useSelector((state: RootState) => state.user.userObj);
+  const dispatch = useDispatch();
   const [newDisplayName, setnewDisplayName] = useState(userObj!.displayName);
 
   const onLogOutClick = () => {
-    authService.signOut();
+    appAuth.signOut();
     navigate('/');
   };
 
@@ -28,20 +28,24 @@ const Profile = ({ userObj, refreshUser }: Props) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userObj!.displayName !== newDisplayName) {
-      await updateProfile(authService.currentUser!, {
+    if (!(userObj!.displayName !== newDisplayName)) {
+      alert('기존 이름과 동일합니다.');
+    } else if (!(newDisplayName.length > 0)) {
+      alert('이름을 입력하세요.');
+    } else {
+      await updateProfile(appAuth.currentUser!, {
         displayName: newDisplayName,
       });
+      alert('이름이 변경되었습니다.');
+      dispatch(userActions.refreshUser());
     }
-    refreshUser();
-    alert('이름이 변경되었습니다.');
   };
 
   const onDeactivateClick = async () => {
     const confirm = window.confirm(`정말 아이디를 삭제하시겠습니까?`);
     if (confirm) {
       try {
-        const result = await deleteUser(authService.currentUser!);
+        const result = await deleteUser(appAuth.currentUser!);
         alert(`아이디를 성공적으로 삭제했습니다.`);
         navigate('/');
       } catch (err) {

@@ -1,30 +1,22 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import Auth from "../pages/Auth";
-import Profile from "../pages/Profile";
-import { DocumentData } from "firebase/firestore";
-
+import { Routes, Route } from 'react-router-dom';
+import Home from '../pages/Home';
+import Auth from '../pages/Auth';
+import Profile from '../pages/Profile';
+import DetailPage from '../pages/DetailPage';
 interface Props {
   isLoggedIn: boolean;
-  userObj: DocumentData | null;
-  refreshUser: () => void;
 }
 
-const AppRouter = ({ isLoggedIn, userObj, refreshUser }: Props) => {
+const AppRouter = ({ isLoggedIn }: Props) => {
   return (
     <Routes>
       {isLoggedIn ? (
-        <Route
-          path={"/"}
-          element={<Home userObj={userObj} refreshUser={refreshUser} />}
-        />
+        <Route path={'/'} element={<Home />} />
       ) : (
-        <Route path={"/"} element={<Auth />} />
+        <Route path={'/'} element={<Auth />} />
       )}
-      <Route
-        path="/profile"
-        element={<Profile userObj={userObj} refreshUser={refreshUser} />}
-      />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/detail" element={<DetailPage />} />
     </Routes>
   );
 };

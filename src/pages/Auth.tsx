@@ -9,7 +9,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import logoImg from '../assets/logo.png';
-import { authService } from '../firebase/config';
+import { appAuth } from '../firebase/config';
 import AuthForm from '../components/AuthForm';
 import ReactTypingEffect from 'react-typing-effect';
 
@@ -28,7 +28,7 @@ const Auth = () => {
     } else if (name === 'github') {
       provider = new GithubAuthProvider();
     }
-    const data = await signInWithPopup(authService, provider);
+    const data = await signInWithPopup(appAuth, provider);
   };
 
   const toggleDisplay = (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -8,23 +8,23 @@ import {
   orderBy,
   DocumentData,
 } from 'firebase/firestore';
-import { dbService } from '../firebase/config';
+import { appFireStore } from '../firebase/config';
 import Profile from './Profile';
 import Generator from '../components/Generator';
 import Feed from '../components/Feed';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { dataActions } from '../store/dataSlice';
 
-interface Props {
-  userObj: DocumentData | null;
-  refreshUser: () => void;
-}
-
-const Home = ({ userObj, refreshUser }: Props) => {
-  const [feeds, setFeeds] = useState<DocumentData[]>([]);
+const Home = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const userObj = useSelector((state: RootState) => state.user.userObj);
+  const feeds = useSelector((state: RootState) => state.data.feeds);
 
   const getFeeds = async () => {
     const q = query(
-      collection(dbService, 'feeds'),
+      collection(appFireStore, 'feeds'),
       orderBy('createdAt', 'desc'),
     );
     onSnapshot(q, (snapshot) => {
@@ -32,7 +32,7 @@ const Home = ({ userObj, refreshUser }: Props) => {
         id: doc.id,
         ...doc.data(),
       }));
-      setFeeds(feedArr);
+      dispatch(dataActions.setFeeds(feedArr));
     });
   };
 
@@ -43,16 +43,15 @@ const Home = ({ userObj, refreshUser }: Props) => {
   return (
     <Main>
       <HomeFeedContainer>
-        <Generator userObj={userObj} />
+        <Generator />
         {feeds.length !== 0 ? (
           <>
             {feeds.map((feed) => {
               return (
                 <Feed
+                  feedData={feed}
                   key={feed.id}
-                  feedObj={feed}
                   isOwner={feed.creatorId === userObj!.uid}
-                  displayName={feed.displayName}
                 />
               );
             })}
@@ -61,9 +60,7 @@ const Home = ({ userObj, refreshUser }: Props) => {
           <Message>피드가 비어있습니다.</Message>
         )}
       </HomeFeedContainer>
-      {location.pathname === '/profile' && (
-        <Profile userObj={userObj} refreshUser={refreshUser} />
-      )}
+      {location.pathname === '/profile' && <Profile />}
     </Main>
   );
 };
@@ -82,7 +79,7 @@ export const HomeFeedContainer = styled.div`
   border-right: solid 1px #eee;
 `;
 
-const Message = styled.p`
+export const Message = styled.p`
   margin: 1rem;
   font-size: 1rem;
 `;

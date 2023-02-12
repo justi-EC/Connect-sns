@@ -1,9 +1,14 @@
 import { ref } from 'firebase/storage';
-import { DocumentData, DocumentReference, deleteDoc } from 'firebase/firestore';
+import {
+  CollectionReference,
+  DocumentData,
+  DocumentReference,
+  deleteDoc,
+} from 'firebase/firestore';
 import { deleteObject } from 'firebase/storage';
 import styled from 'styled-components';
 import { IoMdClose } from 'react-icons/io';
-import { storageService } from '../firebase/config';
+import { appStorage } from '../firebase/config';
 
 interface Props {
   toggleEditing: () => void;
@@ -20,7 +25,7 @@ const Menu = ({
   isOpen,
   toggleOpen,
 }: Props) => {
-  const attachmentUrlRef = ref(storageService, feedObj.attachmentUrl);
+  const attachmentUrlRef = ref(appStorage, feedObj.attachmentUrl);
 
   const onDeleteClick = async () => {
     const ok = window.confirm('정말 삭제하시겠습니까?');
@@ -43,7 +48,7 @@ const Menu = ({
 
 export default Menu;
 
-const Popup = styled.div<{ isOpen: boolean }>`
+export const Popup = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => (isOpen ? `flex` : 'none')};
   flex-direction: column;
   border: solid 1px #eee;
@@ -58,7 +63,7 @@ const Popup = styled.div<{ isOpen: boolean }>`
   z-index: 100;
 `;
 
-const EditButton = styled.button`
+export const EditButton = styled.button`
   background-color: transparent;
   border: none;
   padding: 1rem;
@@ -70,9 +75,9 @@ const EditButton = styled.button`
   font-family: var(--font-Noto-Sans-KR);
 `;
 
-const DeleteButton = styled(EditButton)``;
+export const DeleteButton = styled(EditButton)``;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background-color: transparent;
   border: none;
   font-size: 1rem;
