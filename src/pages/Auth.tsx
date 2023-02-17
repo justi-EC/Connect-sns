@@ -74,13 +74,13 @@ const Auth = () => {
                 <FaGithub />
                 GitHub 계정으로 가입
               </SignUpButton>
-              <SignUpWithEmailBtn name="SignUp" onClick={toggleDisplay}>
-                이메일 계정으로 가입
-              </SignUpWithEmailBtn>
-              <Text>이미 계정이 있으신가요?</Text>
               <SignInButton name="SignIn" onClick={toggleDisplay} ref={ref}>
                 로그인
               </SignInButton>
+              <Text>계정이 없으신가요?</Text>
+              <SignUpWithEmailBtn name="SignUp" onClick={toggleDisplay}>
+                이메일 계정으로 가입
+              </SignUpWithEmailBtn>
             </>
           )}
         </div>
@@ -222,19 +222,20 @@ const SignUpButton = styled.button`
 `;
 
 const SignUpWithEmailBtn = styled(SignUpButton)`
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   &:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
 `;
 
-const SignInButton = styled(SignUpButton)`
-  color: #000000;
-  font-weight: 700;
+export const SignInButton = styled(SignUpButton)`
+  color: #ffffff;
+  background-color: black;
+  font-weight: bold;
   margin-top: 1rem;
   &:hover {
-    background-color: rgba(224, 224, 224, 0.5);
+    background-color: #171717;
   }
 `;
 

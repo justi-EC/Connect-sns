@@ -1,14 +1,25 @@
-import { DocumentData, doc, updateDoc } from 'firebase/firestore';
-import { useState } from 'react';
+import {
+  DocumentData,
+  doc,
+  updateDoc,
+  increment,
+  arrayUnion,
+  arrayRemove,
+  onSnapshot,
+} from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BsThreeDots } from 'react-icons/bs';
 import { appFireStore } from '../firebase/config';
 import { timeStamp } from '../utils/timeStamp';
 import Menu from './Menu';
 import { SubmitButton } from './Generator';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { dataActions } from '../store/dataSlice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AiFillHeart } from 'react-icons/ai';
+import { AiOutlineHeart } from 'react-icons/ai';
+import { getAuth } from 'firebase/auth';
 
 interface Props {
   feedData: DocumentData;
@@ -19,10 +30,15 @@ const Feed = ({ feedData, isOwner }: Props) => {
   const [editing, setEditing] = useState(false);
   const [newFeed, setNewFeed] = useState(feedData.text);
   const [open, setOpen] = useState(false);
+  const [isMain, setIsMain] = useState(true);
+  const [likeClicked, setLikeClicked] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const feedRef = doc(appFireStore, 'feeds', `${feedData.id}`);
+  const [isImgHide, setIsImgHide] = useState(false);
+
   const toggleOpen = () => setOpen((prev) => !prev);
-  const feedTextRef = doc(appFireStore, 'feeds', `${feedData.id}`);
 
   const UserInfoOpen = () => {
     dispatch(dataActions.showUserPosts(feedData.creatorId));
@@ -30,26 +46,78 @@ const Feed = ({ feedData, isOwner }: Props) => {
   };
 
   const toggleEditing = () => {
+    setIsImgHide(false);
     setEditing((prev) => !prev);
     toggleOpen();
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await updateDoc(feedTextRef, { text: newFeed });
-    setEditing(false);
+
+    if (isImgHide) {
+      await updateDoc(feedRef, { text: newFeed, attachmentUrl: '' });
+      setEditing(false);
+    } else {
+      await updateDoc(feedRef, { text: newFeed });
+      setEditing(false);
+    }
   };
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.currentTarget.value;
     setNewFeed(value);
   };
 
+  const isClickedLike = async () => {
+    setLikeClicked((prev) => !prev);
+    const user = getAuth().currentUser;
+    const userId = user!.uid;
+
+    if (!likeClicked) {
+      await updateDoc(feedRef, {
+        like: increment(1),
+        likeList: arrayUnion(userId),
+      });
+    } else {
+      await updateDoc(feedRef, {
+        like: increment(-1),
+        likeList: arrayRemove(userId),
+      });
+    }
+  };
+
+  const editImageDelete = async () => {
+    setIsImgHide((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setIsMain(false);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    const user = getAuth().currentUser;
+    const userId = user?.uid;
+    if (user) {
+      const unsubscribe = onSnapshot(feedRef, (snapshot) => {
+        const data = snapshot.data();
+        if (data && data.likeList) {
+          if (userId && data.likeList.includes(userId)) {
+            setLikeClicked(true);
+          } else {
+            setLikeClicked(false);
+          }
+        }
+      });
+      return unsubscribe;
+    }
+  }, [feedRef]);
   return (
     <div>
       <Wrapper>
         <Author>
           <span>{feedData.displayName}</span> &bull;{' '}
           <time>{timeStamp(feedData.createdAt)}</time>
-          <span onClick={UserInfoOpen}>작성글 보기</span>
+          {isMain && <span onClick={UserInfoOpen}>작성글 보기</span>}
           {isOwner && (
             <MenuButton onClick={toggleOpen}>
               {open ? null : <BsThreeDots size={24} />}
@@ -59,7 +127,7 @@ const Feed = ({ feedData, isOwner }: Props) => {
             <Menu
               toggleEditing={toggleEditing}
               feedObj={feedData}
-              feedTextRef={feedTextRef}
+              feedRef={feedRef}
               isOpen={open}
               toggleOpen={toggleOpen}
             />
@@ -87,7 +155,28 @@ const Feed = ({ feedData, isOwner }: Props) => {
         ) : (
           <FeedText>{feedData.text}</FeedText>
         )}
-        {feedData.attachmentUrl && <Img src={feedData.attachmentUrl} alt="" />}
+        {feedData.attachmentUrl && (
+          <Img src={feedData.attachmentUrl} alt="" hide={isImgHide} />
+        )}
+        {editing && feedData.attachmentUrl && (
+          <ImgXButton onClick={editImageDelete} hide={isImgHide}>
+            X
+          </ImgXButton>
+        )}
+        <div>
+          {likeClicked ? (
+            <button onClick={isClickedLike}>
+              <AiFillHeart size={30} />
+            </button>
+          ) : (
+            <>
+              <button onClick={isClickedLike}>
+                <AiOutlineHeart size={30} />
+              </button>
+            </>
+          )}
+          <span>{feedData.like}</span>
+        </div>
       </Wrapper>
     </div>
   );
@@ -95,16 +184,24 @@ const Feed = ({ feedData, isOwner }: Props) => {
 
 export default Feed;
 
+const ImgXButton = styled.button<{ hide: boolean }>`
+  display: ${({ hide }) => (hide ? `none` : `block`)};
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0;
+`;
+
 const FeedText = styled.div`
   line-height: 1.3rem;
   white-space: pre-wrap;
   margin-bottom: 2rem;
 `;
 
-const Img = styled.img`
+const Img = styled.img<{ hide: boolean }>`
   margin-top: 1.5rem;
   border-radius: 1.5rem;
   border: solid 1px #ccc;
+  display: ${({ hide }) => (hide ? `none` : `block`)};
 `;
 
 const Author = styled.div`
@@ -115,11 +212,9 @@ const Author = styled.div`
   }
   span:nth-child(3) {
     margin-left: 1rem;
+    color: #3f3fa2;
     cursor: pointer;
     transition: 0.2s;
-    &:hover {
-      color: rgba(116, 173, 172, 0.8);
-    }
   }
 `;
 
@@ -143,6 +238,15 @@ const Wrapper = styled.div`
   padding: 1.5rem;
   border-bottom: solid 1px #eee;
   position: relative;
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  div {
+    margin-top: 1rem;
+  }
 `;
 
 const EditForm = styled.form`
@@ -176,7 +280,7 @@ const CancelButton = styled.button`
   border: none;
   font-size: 1rem;
   padding: 0 1.3rem;
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   margin-left: 0.5rem;
   &:hover {
     cursor: pointer;

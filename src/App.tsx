@@ -48,9 +48,11 @@ function App() {
         ) : (
           <LoadingSpinner />
         )}
-        <FloatingButton onClick={ScrollToTop}>
-          <BsFillArrowUpCircleFill size={80} />
-        </FloatingButton>
+        {Boolean(userObj) && (
+          <FloatingButton onClick={ScrollToTop}>
+            <BsFillArrowUpCircleFill size={80} />
+          </FloatingButton>
+        )}
       </Container>
     </>
   );
@@ -67,10 +69,12 @@ const Container = styled.div`
 `;
 
 const FloatingButton = styled.div`
+  z-index: 999;
   position: fixed;
+  display: absolute;
   cursor: pointer;
-  left: 86rem;
-  top: 40rem;
+  right: 120px;
+  bottom: 50px;
   &:hover {
     opacity: 90%;
   }

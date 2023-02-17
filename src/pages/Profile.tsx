@@ -8,7 +8,9 @@ import { SubmitButton } from '../components/Generator';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useDispatch } from 'react-redux/es/exports';
-import { userActions } from '../store/UserSlice';
+import { userActions } from '../store/userSlice';
+import { CgHello } from 'react-icons/cg';
+import { DefaultMotion, DelayMotion } from '../utils/Motion';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -58,22 +60,32 @@ const Profile = () => {
 
   return (
     <Main>
-      <Container>
-        <Form onSubmit={onSubmit}>
-          <EditNameInput
-            type="text"
-            placeholder="변경할 이름을 입력"
-            onChange={onChange}
-          />
-          <UpdateButton type="submit" value="이름 변경" />
-        </Form>
-        <LogoutButton as="button" onClick={onLogOutClick}>
-          로그아웃
-        </LogoutButton>
-        <DeactivateButton as="button" onClick={onDeactivateClick}>
-          계정 삭제
-        </DeactivateButton>
-      </Container>
+      <DefaultMotion>
+        <ProfileText>
+          <span>
+            <CgHello size={40} />
+          </span>
+          <span>안녕하세요. {userObj!.displayName}님!</span>
+        </ProfileText>
+      </DefaultMotion>
+      <DelayMotion>
+        <Container>
+          <Form onSubmit={onSubmit}>
+            <EditNameInput
+              type="text"
+              placeholder="변경할 이름을 입력"
+              onChange={onChange}
+            />
+            <UpdateButton type="submit" value="이름 변경" />
+          </Form>
+          <LogoutButton as="button" onClick={onLogOutClick}>
+            로그아웃
+          </LogoutButton>
+          <DeactivateButton as="button" onClick={onDeactivateClick}>
+            계정 삭제
+          </DeactivateButton>
+        </Container>
+      </DelayMotion>
     </Main>
   );
 };
@@ -87,7 +99,7 @@ const Container = styled.div`
   justify-content: center;
   border-left: solid 1px #eee;
   border-right: solid 1px #eee;
-  height: 100vh;
+  height: 70vh;
 `;
 
 const Form = styled.form`
@@ -95,6 +107,17 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   margin-bottom: 2rem;
+`;
+
+const ProfileText = styled.div`
+  display: flex;
+  margin: 3rem;
+  font-weight: bold;
+  font-size: 40px;
+  font-family: var(--font-NanumGothic);
+  span {
+    margin-right: 0.5rem;
+  }
 `;
 
 const EditNameInput = styled.input`
@@ -119,7 +142,7 @@ const UpdateButton = styled(SubmitButton)`
 
 const LogoutButton = styled(SubmitButton)`
   background-color: #eee;
-  color: #717171;
+  color: #393939;
   width: 10rem;
   margin-bottom: 1.5rem;
   &:hover {

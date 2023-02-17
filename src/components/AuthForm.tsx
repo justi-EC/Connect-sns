@@ -7,6 +7,7 @@ import {
 import styled from 'styled-components';
 import { SubmitButton } from './Generator';
 import { useNavigate } from 'react-router-dom';
+import { SignInButton } from '../pages/Auth';
 
 interface Props {
   newAccount: boolean;
@@ -31,12 +32,11 @@ const AuthForm = ({ newAccount, setNewAccount }: Props) => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      let data;
       if (newAccount) {
-        data = await createUserWithEmailAndPassword(appAuth, email, password);
+        await createUserWithEmailAndPassword(appAuth, email, password);
         navigate('/profile');
       } else {
-        data = await signInWithEmailAndPassword(appAuth, email, password);
+        await signInWithEmailAndPassword(appAuth, email, password);
       }
     } catch (error: any) {
       switch (error.code) {

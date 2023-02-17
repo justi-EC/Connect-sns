@@ -9,11 +9,12 @@ import { deleteObject } from 'firebase/storage';
 import styled from 'styled-components';
 import { IoMdClose } from 'react-icons/io';
 import { appStorage } from '../firebase/config';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   toggleEditing: () => void;
   feedObj: DocumentData;
-  feedTextRef: DocumentReference<DocumentData>;
+  feedRef: DocumentReference<DocumentData>;
   isOpen: boolean;
   toggleOpen: () => void;
 }
@@ -21,18 +22,20 @@ interface Props {
 const Menu = ({
   toggleEditing,
   feedObj,
-  feedTextRef,
+  feedRef,
   isOpen,
   toggleOpen,
 }: Props) => {
   const attachmentUrlRef = ref(appStorage, feedObj.attachmentUrl);
+  const navigate = useNavigate();
 
   const onDeleteClick = async () => {
     const ok = window.confirm('정말 삭제하시겠습니까?');
     if (ok) {
-      await deleteDoc(feedTextRef);
+      await deleteDoc(feedRef);
       await deleteObject(attachmentUrlRef);
     }
+    navigate('/');
   };
 
   return (

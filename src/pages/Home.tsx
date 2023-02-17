@@ -69,6 +69,7 @@ export default Home;
 
 export const Main = styled.main`
   width: 1024px;
+  margin-top: 2rem;
   @media screen and (max-width: 768px) {
     min-width: 85%;
   }

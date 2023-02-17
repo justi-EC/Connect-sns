@@ -30,6 +30,7 @@ const Generator = () => {
           creatorId: userObj.uid,
           displayName: userObj.displayName,
           attachmentUrl,
+          like: 0,
         });
         setFeed('');
         setAttachment('');
@@ -54,6 +55,7 @@ const Generator = () => {
         setAttachment(result as string);
       };
       reader.readAsDataURL(theFile);
+      e.currentTarget.value = '';
     }
   };
 
@@ -170,9 +172,9 @@ export const SubmitButton = styled.input`
   background-color: #000000;
   color: #ffffff;
   box-sizing: border-box;
-  height: 3rem;
+  height: 4rem;
   padding: 0 1.3rem;
-  border-radius: 3rem;
+  border-radius: 1rem;
   border-color: transparent;
   font-size: 1rem;
   &:hover {
