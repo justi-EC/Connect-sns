@@ -19,6 +19,7 @@ const Auth = () => {
   const [newAccount, setNewAccount] = useState(true);
   const [isDisplay, setIsDisplay] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
+
   let provider: SocialProvider;
 
   const onSocialClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,9 +46,9 @@ const Auth = () => {
     ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
   return (
-    <Div>
+    <Container>
       <ImgContainer>
-        <img src={logoImg} alt="Kiwitter" onClick={scrollToElement} />
+        <img src={logoImg} alt="" onClick={scrollToElement} />
       </ImgContainer>
       <TextWrapper onClick={scrollToElement}>
         <ReactTypingEffect text={['Connect.']} />
@@ -55,43 +56,41 @@ const Auth = () => {
       <AuthContainer>
         {isDisplay ? (
           <BackButton onClick={toggleDisplay}>
-            <ArrowBack width={80} height={80} />
+            <ArrowBack size={50} />
           </BackButton>
         ) : (
           <span />
         )}
 
-        <div>
-          {isDisplay ? (
-            <AuthForm newAccount={newAccount} setNewAccount={setNewAccount} />
-          ) : (
-            <>
-              <SignUpButton onClick={onSocialClick} name="google">
-                <FcGoogle />
-                Google 계정으로 가입
-              </SignUpButton>
-              <SignUpButton onClick={onSocialClick} name="github">
-                <FaGithub />
-                GitHub 계정으로 가입
-              </SignUpButton>
-              <SignInButton name="SignIn" onClick={toggleDisplay} ref={ref}>
-                로그인
-              </SignInButton>
-              <Text>계정이 없으신가요?</Text>
-              <SignUpWithEmailBtn name="SignUp" onClick={toggleDisplay}>
-                이메일 계정으로 가입
-              </SignUpWithEmailBtn>
-            </>
-          )}
-        </div>
+        {isDisplay ? (
+          <AuthForm newAccount={newAccount} setNewAccount={setNewAccount} />
+        ) : (
+          <>
+            <SignUpButton onClick={onSocialClick} name="google">
+              <FcGoogle />
+              Google 계정으로 가입
+            </SignUpButton>
+            <SignUpButton onClick={onSocialClick} name="github">
+              <FaGithub />
+              GitHub 계정으로 가입
+            </SignUpButton>
+            <SignInButton name="SignIn" onClick={toggleDisplay} ref={ref}>
+              로그인
+            </SignInButton>
+            <Text>계정이 없으신가요?</Text>
+            <SignUpWithEmailBtn name="SignUp" onClick={toggleDisplay}>
+              이메일 계정으로 가입
+            </SignUpWithEmailBtn>
+          </>
+        )}
       </AuthContainer>
-    </Div>
+    </Container>
   );
 };
 
 export default Auth;
 
-const Div = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -100,9 +99,9 @@ const Div = styled.div`
 
 const TextWrapper = styled.div`
   position: relative;
-  bottom: 16.5rem;
+  bottom: 17rem;
   text-align: center;
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-family: var(--font-Montserrat);
   cursor: pointer;
 `;
@@ -117,14 +116,12 @@ const ImgContainer = styled.div`
     margin: 6rem;
     cursor: pointer;
   }
-
   background: #ffffff url('https://ifh.cc/g/W7wkth.png') repeat 0 0;
   -webkit-animation: 45s linear 0s normal none infinite animate;
   -moz-animation: 45s linear 0s normal none infinite animate;
   -ms-animation: 45s linear 0s normal none infinite animate;
   -o-animation: 45s linear 0s normal none infinite animate;
   animation: 45s linear 0s normal none infinite animate;
-
   @-webkit-keyframes animate {
     from {
       background-position: 0 0;
@@ -133,7 +130,6 @@ const ImgContainer = styled.div`
       background-position: 1000px 0;
     }
   }
-
   @-moz-keyframes animate {
     from {
       background-position: 0 0;
@@ -142,7 +138,6 @@ const ImgContainer = styled.div`
       background-position: 1000px 0;
     }
   }
-
   @-ms-keyframes animate {
     from {
       background-position: 0 0;
@@ -151,7 +146,6 @@ const ImgContainer = styled.div`
       background-position: 1000px 0;
     }
   }
-
   @-o-keyframes animate {
     from {
       background-position: 0 0;
@@ -160,7 +154,6 @@ const ImgContainer = styled.div`
       background-position: 1000px 0;
     }
   }
-
   @keyframes animate {
     from {
       background-position: 0 0;
@@ -191,13 +184,13 @@ export const Logo = styled.img`
   margin-bottom: 1rem;
 `;
 
-const SignUpButton = styled.button`
+export const SignUpButton = styled.button`
   border: solid 1px #eee;
   background-color: transparent;
   padding: 0.5rem 0;
   width: 40rem;
   height: 4rem;
-  border-radius: 1.5rem;
+  border-radius: 2rem;
   font-size: 1.3rem;
   &:hover {
     cursor: pointer;
@@ -215,7 +208,6 @@ const SignUpButton = styled.button`
     margin-right: 0.5rem;
   }
   font-family: var(--font-Noto-Sans-KR);
-
   @media screen and (max-width: 768px) {
     width: 30rem;
   }
@@ -232,7 +224,6 @@ const SignUpWithEmailBtn = styled(SignUpButton)`
 export const SignInButton = styled(SignUpButton)`
   color: #ffffff;
   background-color: black;
-  font-weight: bold;
   margin-top: 1rem;
   &:hover {
     background-color: #171717;
@@ -241,7 +232,7 @@ export const SignInButton = styled(SignUpButton)`
 
 const BackButton = styled.button`
   border: solid 0px transparent;
-  margin-right: 38rem;
+  margin-right: 40rem;
   background-color: transparent;
   margin-top: -3rem;
   box-sizing: border-box;
@@ -252,7 +243,6 @@ const BackButton = styled.button`
     background-color: rgba(192, 192, 192, 0.3);
     transition: 0.2s;
   }
-
   @media screen and (max-width: 768px) {
     margin-right: 29rem;
   }

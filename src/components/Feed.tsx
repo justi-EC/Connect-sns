@@ -14,7 +14,7 @@ import { appFireStore } from '../firebase/config';
 import { timeStamp } from '../utils/timeStamp';
 import Menu from './Menu';
 import { SubmitButton } from './Generator';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { dataActions } from '../store/dataSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AiFillHeart } from 'react-icons/ai';
@@ -28,15 +28,15 @@ interface Props {
 
 const Feed = ({ feedData, isOwner }: Props) => {
   const [editing, setEditing] = useState(false);
-  const [newFeed, setNewFeed] = useState(feedData.text);
   const [open, setOpen] = useState(false);
   const [isMain, setIsMain] = useState(true);
   const [likeClicked, setLikeClicked] = useState(false);
+  const [isImgHide, setIsImgHide] = useState(false);
+  const [newFeed, setNewFeed] = useState(feedData.text);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const feedRef = doc(appFireStore, 'feeds', `${feedData.id}`);
-  const [isImgHide, setIsImgHide] = useState(false);
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -50,14 +50,21 @@ const Feed = ({ feedData, isOwner }: Props) => {
     setEditing((prev) => !prev);
     toggleOpen();
   };
+
+  const toggleCancel = () => {
+    setIsImgHide(false);
+    setEditing((prev) => !prev);
+  };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isImgHide) {
       await updateDoc(feedRef, { text: newFeed, attachmentUrl: '' });
+      alert('수정이 완료되었습니다.');
       setEditing(false);
     } else {
       await updateDoc(feedRef, { text: newFeed });
+      alert('수정이 완료되었습니다.');
       setEditing(false);
     }
   };
@@ -84,7 +91,8 @@ const Feed = ({ feedData, isOwner }: Props) => {
     }
   };
 
-  const editImageDelete = async () => {
+  const editImageDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsImgHide((prev) => !prev);
   };
 
@@ -135,45 +143,45 @@ const Feed = ({ feedData, isOwner }: Props) => {
         </Author>
         {editing ? (
           <>
-            {isOwner && (
-              <>
-                <EditForm onSubmit={onSubmit}>
-                  <TextInput
-                    value={newFeed}
-                    required
-                    placeholder="수정할 내용을 입력하세요."
-                    onChange={onChange}
-                  />
-                  <ButtonWrapper>
-                    <SubmitButton type="submit" value="수정" />
-                    <CancelButton onClick={toggleEditing}>취소</CancelButton>
-                  </ButtonWrapper>
-                </EditForm>
-              </>
-            )}
+            <form onSubmit={onSubmit}>
+              <TextInput
+                value={newFeed}
+                required
+                placeholder="수정할 내용을 입력하세요."
+                onChange={onChange}
+              />
+              {feedData.attachmentUrl && (
+                <Img src={feedData.attachmentUrl} alt="" hide={isImgHide} />
+              )}
+              {feedData.attachmentUrl && (
+                <ImgDeleteButton onClick={editImageDelete} hide={isImgHide}>
+                  이미지 삭제
+                </ImgDeleteButton>
+              )}
+              <ButtonWrapper>
+                <SubmitButton type="submit" value="수정" />
+                <CancelButton onClick={toggleCancel}>취소</CancelButton>
+              </ButtonWrapper>
+            </form>
           </>
         ) : (
-          <FeedText>{feedData.text}</FeedText>
+          <>
+            <FeedText>{feedData.text}</FeedText>
+            {feedData.attachmentUrl && (
+              <Img src={feedData.attachmentUrl} alt="" hide={isImgHide} />
+            )}
+          </>
         )}
-        {feedData.attachmentUrl && (
-          <Img src={feedData.attachmentUrl} alt="" hide={isImgHide} />
-        )}
-        {editing && feedData.attachmentUrl && (
-          <ImgXButton onClick={editImageDelete} hide={isImgHide}>
-            X
-          </ImgXButton>
-        )}
+
         <div>
           {likeClicked ? (
             <button onClick={isClickedLike}>
               <AiFillHeart size={30} />
             </button>
           ) : (
-            <>
-              <button onClick={isClickedLike}>
-                <AiOutlineHeart size={30} />
-              </button>
-            </>
+            <button onClick={isClickedLike}>
+              <AiOutlineHeart size={30} />
+            </button>
           )}
           <span>{feedData.like}</span>
         </div>
@@ -184,11 +192,12 @@ const Feed = ({ feedData, isOwner }: Props) => {
 
 export default Feed;
 
-const ImgXButton = styled.button<{ hide: boolean }>`
+const ImgDeleteButton = styled.button<{ hide: boolean }>`
   display: ${({ hide }) => (hide ? `none` : `block`)};
-  font-size: 25px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 20px;
+  font-family: var(--font-Noto-Sans-KR);
+  color: #3f3fa2;
+  transition: 0.2s;
 `;
 
 const FeedText = styled.div`
@@ -247,11 +256,11 @@ const Wrapper = styled.div`
   div {
     margin-top: 1rem;
   }
-`;
 
-const EditForm = styled.form`
-  display: flex;
-  flex-direction: column;
+  form {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const TextInput = styled.textarea`
@@ -280,7 +289,7 @@ const CancelButton = styled.button`
   border: none;
   font-size: 1rem;
   padding: 0 1.3rem;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   margin-left: 0.5rem;
   &:hover {
     cursor: pointer;

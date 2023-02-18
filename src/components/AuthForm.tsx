@@ -3,11 +3,11 @@ import { appAuth } from '../firebase/config';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 import styled from 'styled-components';
 import { SubmitButton } from './Generator';
 import { useNavigate } from 'react-router-dom';
-import { SignInButton } from '../pages/Auth';
 
 interface Props {
   newAccount: boolean;
@@ -17,6 +17,7 @@ interface Props {
 const AuthForm = ({ newAccount, setNewAccount }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -27,13 +28,22 @@ const AuthForm = ({ newAccount, setNewAccount }: Props) => {
       setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
+    } else {
+      setName(value);
     }
   };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (newAccount) {
-        await createUserWithEmailAndPassword(appAuth, email, password);
+        const res = await createUserWithEmailAndPassword(
+          appAuth,
+          email,
+          password,
+        );
+        const user = res.user;
+        updateProfile(user, { displayName: name });
         navigate('/profile');
       } else {
         await signInWithEmailAndPassword(appAuth, email, password);
@@ -74,6 +84,16 @@ const AuthForm = ({ newAccount, setNewAccount }: Props) => {
           value={password}
           onChange={onChange}
         />
+        {newAccount && (
+          <TextInput
+            name="text"
+            type="text"
+            placeholder="Name"
+            required
+            value={name}
+            onChange={onChange}
+          />
+        )}
         <Error>{error}</Error>
         <SubmitButton
           type="submit"

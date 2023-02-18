@@ -174,7 +174,7 @@ export const SubmitButton = styled.input`
   box-sizing: border-box;
   height: 4rem;
   padding: 0 1.3rem;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   border-color: transparent;
   font-size: 1rem;
   &:hover {

@@ -14,45 +14,40 @@ const Navigation = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const userObj = useSelector((state: RootState) => state.user.userObj);
+  const linkStyle = { textDecoration: 'none', color: 'inherit' };
 
   return (
     <header>
       <Nav>
         <ul>
-          <MenuItem>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <li>
+            <Link to="/" style={linkStyle}>
               {location.pathname === '/' ? <AiFillHome /> : <AiOutlineHome />}
-              <MenuName>Home</MenuName>
+              <span>Home</span>
             </Link>
-          </MenuItem>
-          <MenuItem>
+          </li>
+          <li>
             <IoFileTrayFullSharp />
-            <Link
-              to="detail"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <MenuName
+            <Link to="detail" style={linkStyle}>
+              <span
                 onClick={() =>
                   dispatch(dataActions.showUserPosts(userObj!.uid))
                 }
               >
                 My Post
-              </MenuName>
+              </span>
             </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link
-              to="/profile"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
+          </li>
+          <li>
+            <Link to="/profile" style={linkStyle}>
               {location.pathname === '/profile' ? (
                 <IoPersonCircleSharp />
               ) : (
                 <IoPersonCircleOutline />
               )}
-              <MenuName>Profile</MenuName>
+              <span>Profile</span>
             </Link>
-          </MenuItem>
+          </li>
         </ul>
       </Nav>
     </header>
@@ -70,20 +65,19 @@ const Nav = styled.nav`
   ul {
     list-style-type: none;
   }
-`;
 
-const MenuItem = styled.li`
-  box-sizing: border-box;
-  padding: 0.5rem 1.2rem;
-  margin-bottom: 1rem;
+  li {
+    box-sizing: border-box;
+    padding: 0.5rem 1.2rem;
+    margin-bottom: 1rem;
 
-  &:hover {
-    background-color: #eee;
-    border-radius: 1.5rem;
+    &:hover {
+      background-color: #eee;
+      border-radius: 1.5rem;
+    }
   }
-`;
-
-const MenuName = styled.span`
-  margin-left: 0.3rem;
-  line-height: 2rem;
+  span {
+    margin-left: 0.3rem;
+    line-height: 2rem;
+  }
 `;

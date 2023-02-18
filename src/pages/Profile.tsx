@@ -16,23 +16,23 @@ const Profile = () => {
   const navigate = useNavigate();
   const userObj = useSelector((state: RootState) => state.user.userObj);
   const dispatch = useDispatch();
-  const [newDisplayName, setnewDisplayName] = useState(userObj!.displayName);
+  const [newDisplayName, setnewDisplayName] = useState('');
 
   const onLogOutClick = () => {
     appAuth.signOut();
     navigate('/');
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     setnewDisplayName(value);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!(userObj!.displayName !== newDisplayName)) {
+    if (newDisplayName === userObj!.displayName) {
       alert('기존 이름과 동일합니다.');
-    } else if (!(newDisplayName.length > 0)) {
+    } else if (newDisplayName.length === 0) {
       alert('이름을 입력하세요.');
     } else {
       await updateProfile(appAuth.currentUser!, {
@@ -74,7 +74,7 @@ const Profile = () => {
             <EditNameInput
               type="text"
               placeholder="변경할 이름을 입력"
-              onChange={onChange}
+              onChange={onChangeName}
             />
             <UpdateButton type="submit" value="이름 변경" />
           </Form>
