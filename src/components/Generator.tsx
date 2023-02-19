@@ -99,7 +99,6 @@ export default Generator;
 
 const Form = styled.form`
   border-bottom: solid 1px #eee;
-  box-sizing: border-box;
   padding: 1rem;
 `;
 
@@ -108,18 +107,14 @@ const TextInputContainer = styled.div`
 `;
 
 const TextInput = styled.textarea`
-  box-sizing: border-box;
   padding: 0.8rem;
   width: 100%;
   font-size: 1.1rem;
   margin-bottom: 0.8rem;
   border: solid 2px #eee;
-  resize: none;
   &:focus {
-    outline: none;
     border: solid 2px #b7b7b7;
   }
-  font-family: var(--font-Noto-Sans-KR);
 `;
 
 const AttachmentWrapper = styled.div`
@@ -151,7 +146,6 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end;
   align-items: center;
   label {
-    box-sizing: border-box;
     border-radius: 50%;
     padding: 0.7rem;
     text-align: center;
@@ -171,16 +165,13 @@ const FileInput = styled.input`
 export const SubmitButton = styled.input`
   background-color: #000000;
   color: #ffffff;
-  box-sizing: border-box;
   height: 4rem;
   padding: 0 1.3rem;
   border-radius: 0.5rem;
-  border-color: transparent;
   font-size: 1rem;
   &:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);
     transition: 0.2s;
   }
-  font-family: var(--font-Noto-Sans-KR);
 `;

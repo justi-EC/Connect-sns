@@ -7,7 +7,7 @@ interface Props {
   isLoggedIn: boolean;
 }
 
-const AppRouter = ({ isLoggedIn }: Props) => {
+const Router = ({ isLoggedIn }: Props) => {
   return (
     <Routes>
       {isLoggedIn ? (
@@ -21,4 +21,4 @@ const AppRouter = ({ isLoggedIn }: Props) => {
   );
 };
 
-export default AppRouter;
+export default Router;

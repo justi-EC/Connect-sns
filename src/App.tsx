@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { appAuth } from './firebase/config';
 import Navigation from './components/Navigation';
-import AppRouter from './components/Router';
 import LoadingSpinner from './components/LoadingSpinner';
 import { useDispatch } from 'react-redux';
 import { userActions } from './store/userSlice';
 import { useSelector } from 'react-redux/es/exports';
 import { RootState } from './store/store';
 import { BsFillArrowUpCircleFill } from 'react-icons/bs';
+import Router from './components/Router';
 
 function App() {
   const [init, setInit] = useState(false);
@@ -43,11 +43,7 @@ function App() {
     <>
       <Container>
         {Boolean(userObj) && <Navigation />}
-        {init ? (
-          <AppRouter isLoggedIn={Boolean(userObj)} />
-        ) : (
-          <LoadingSpinner />
-        )}
+        {init ? <Router isLoggedIn={Boolean(userObj)} /> : <LoadingSpinner />}
         {Boolean(userObj) && (
           <FloatingButton onClick={ScrollToTop}>
             <BsFillArrowUpCircleFill size={80} />
@@ -68,11 +64,10 @@ const Container = styled.div`
   }
 `;
 
-const FloatingButton = styled.div`
+const FloatingButton = styled.button`
   z-index: 999;
   position: fixed;
   display: absolute;
-  cursor: pointer;
   right: 120px;
   bottom: 50px;
   &:hover {

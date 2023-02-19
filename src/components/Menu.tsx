@@ -67,27 +67,18 @@ export const Popup = styled.div<{ isOpen: boolean }>`
 `;
 
 export const EditButton = styled.button`
-  background-color: transparent;
-  border: none;
   padding: 1rem;
   &:hover {
-    cursor: pointer;
     background-color: #f7f7f7;
     transition: 0.2s;
   }
-  font-family: var(--font-Noto-Sans-KR);
 `;
 
 export const DeleteButton = styled(EditButton)``;
 
 export const CloseButton = styled.button`
-  background-color: transparent;
-  border: none;
   font-size: 1rem;
   align-self: flex-end;
   margin-top: 0.5rem;
   margin-right: 0.5rem;
-  &:hover {
-    cursor: pointer;
-  }
 `;

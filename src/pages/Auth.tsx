@@ -77,7 +77,7 @@ const Auth = () => {
             <SignInButton name="SignIn" onClick={toggleDisplay} ref={ref}>
               로그인
             </SignInButton>
-            <Text>계정이 없으신가요?</Text>
+            <h1>계정이 없으신가요?</h1>
             <SignUpWithEmailBtn name="SignUp" onClick={toggleDisplay}>
               이메일 계정으로 가입
             </SignUpWithEmailBtn>
@@ -99,10 +99,10 @@ const Container = styled.div`
 
 const TextWrapper = styled.div`
   position: relative;
-  bottom: 17rem;
+  bottom: 16.5rem;
   text-align: center;
   font-size: 3rem;
-  font-family: var(--font-Montserrat);
+  font-family: 'Montserrat', sans-serif;
   cursor: pointer;
 `;
 
@@ -164,12 +164,6 @@ const ImgContainer = styled.div`
   }
 `;
 
-export const Text = styled.p`
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 2rem;
-`;
-
 const AuthContainer = styled.div`
   display: flex;
   margin-bottom: 3rem;
@@ -177,6 +171,12 @@ const AuthContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h1 {
+    font-size: 1rem;
+    text-align: center;
+    margin: 2rem;
+  }
 `;
 
 export const Logo = styled.img`
@@ -186,16 +186,13 @@ export const Logo = styled.img`
 
 export const SignUpButton = styled.button`
   border: solid 1px #eee;
-  background-color: transparent;
   padding: 0.5rem 0;
   width: 40rem;
   height: 4rem;
   border-radius: 2rem;
   font-size: 1.3rem;
   &:hover {
-    cursor: pointer;
     background-color: rgba(224, 224, 224, 0.5);
-    border: solid 1px transparent;
     transition: 0.1s;
   }
   & + button {
@@ -214,10 +211,9 @@ export const SignUpButton = styled.button`
 `;
 
 const SignUpWithEmailBtn = styled(SignUpButton)`
-  background-color: #ffffff;
   color: #000000;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(224, 224, 224, 0.5);
   }
 `;
 
@@ -231,15 +227,11 @@ export const SignInButton = styled(SignUpButton)`
 `;
 
 const BackButton = styled.button`
-  border: solid 0px transparent;
-  margin-right: 40rem;
-  background-color: transparent;
+  margin-right: 42rem;
   margin-top: -3rem;
-  box-sizing: border-box;
   border-radius: 50%;
   padding: 0.4rem 0.5rem;
   &:hover {
-    cursor: pointer;
     background-color: rgba(192, 192, 192, 0.3);
     transition: 0.2s;
   }

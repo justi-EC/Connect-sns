@@ -67,7 +67,6 @@ const Nav = styled.nav`
   }
 
   li {
-    box-sizing: border-box;
     padding: 0.5rem 1.2rem;
     margin-bottom: 1rem;
 

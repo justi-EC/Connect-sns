@@ -114,7 +114,6 @@ const ProfileText = styled.div`
   margin: 3rem;
   font-weight: bold;
   font-size: 40px;
-  font-family: var(--font-NanumGothic);
   span {
     margin-right: 0.5rem;
   }
@@ -125,13 +124,10 @@ const EditNameInput = styled.input`
   font-size: 1rem;
   font-weight: 500;
   padding: 0.7rem 0;
-  border: none;
   color: gray;
   margin-bottom: 5rem;
   border-bottom: solid 2px lightgray;
-  font-family: var(--font-Noto-Sans-KR);
   &:focus {
-    outline: none;
     border-bottom: solid 2px gray;
   }
 `;

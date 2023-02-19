@@ -128,7 +128,7 @@ const Feed = ({ feedData, isOwner }: Props) => {
           {isMain && <span onClick={UserInfoOpen}>작성글 보기</span>}
           {isOwner && (
             <MenuButton onClick={toggleOpen}>
-              {open ? null : <BsThreeDots size={24} />}
+              {open ? null : <BsThreeDots size={30} />}
             </MenuButton>
           )}
           {open ? (
@@ -195,9 +195,7 @@ export default Feed;
 const ImgDeleteButton = styled.button<{ hide: boolean }>`
   display: ${({ hide }) => (hide ? `none` : `block`)};
   font-size: 20px;
-  font-family: var(--font-Noto-Sans-KR);
-  color: #3f3fa2;
-  transition: 0.2s;
+  color: #aaaaaa;
 `;
 
 const FeedText = styled.div`
@@ -228,14 +226,11 @@ const Author = styled.div`
 `;
 
 const MenuButton = styled.button`
-  background-color: transparent;
-  border: none;
   float: right;
   svg {
     padding: 0.2rem;
     border-radius: 50%;
     &:hover {
-      cursor: pointer;
       background-color: rgba(222, 238, 241, 0.8);
       color: #000000;
       transition: 0.2s;
@@ -247,20 +242,6 @@ const Wrapper = styled.div`
   padding: 1.5rem;
   border-bottom: solid 1px #eee;
   position: relative;
-
-  button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-  }
-  div {
-    margin-top: 1rem;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-  }
 `;
 
 const TextInput = styled.textarea`
@@ -270,13 +251,11 @@ const TextInput = styled.textarea`
   font-size: 1rem;
   padding: 1rem;
   margin-bottom: 1rem;
-  resize: none;
   border: solid 2px #eee;
   &:focus {
     outline: none;
     border: solid 2px #b7b7b7;
   }
-  font-family: var(--font-Noto-Sans-KR);
 `;
 
 const ButtonWrapper = styled.div`
@@ -286,15 +265,12 @@ const ButtonWrapper = styled.div`
 
 const CancelButton = styled.button`
   background-color: #eee;
-  border: none;
   font-size: 1rem;
   padding: 0 1.3rem;
   border-radius: 0.5rem;
   margin-left: 0.5rem;
+  transition: 0.2s;
   &:hover {
-    cursor: pointer;
     background-color: rgb(227, 227, 227);
-    transition: 0.2s;
   }
-  font-family: var(--font-Noto-Sans-KR);
 `;

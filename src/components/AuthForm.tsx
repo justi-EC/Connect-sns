@@ -121,20 +121,19 @@ const TextInput = styled.input`
   border-radius: 0.5rem;
   font-size: 1.3rem;
   width: 40rem;
-  height: 3rem;
-  font-family: var(--font-Noto-Sans-KR);
+  height: 4rem;
 
   @media screen and (max-width: 768px) {
     width: 30rem;
   }
 `;
 
-export const Error = styled.p`
-  font-size: 0.8rem;
+export const Error = styled.h1`
+  font-size: 2rem;
   color: #d60000;
 `;
 
-const SwitchButton = styled.p`
+const SwitchButton = styled.button`
   text-align: center;
   margin-top: 1.5rem;
   &:hover {
